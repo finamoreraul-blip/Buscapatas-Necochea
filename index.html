@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>3A - Acción Social Tres Arroyos</title>
+<style>
+  :root{--azul:#0d4a8a;--verde:#1a7f37;--naranja:#e65100;}
+  *{box-sizing:border-box;font-family:'Segoe UI',Arial,sans-serif}
+  body{
+    margin:0;
+    background: url('muni3a.jpg') no-repeat center fixed;
+    background-size: cover;
+    padding:16px;
+    min-height:100vh;
+  }
+  body::before{content:'';position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.4);z-index:-1;}
+.wrap{max-width:650px;margin:10px auto;background:transparent; padding:0}
+  h1{color:#fff;text-align:center;margin:0 0 6px;font-size:30px;text-shadow:0 3px 10px rgba(0,0,0,.8)}
+.sub{color:#f0f0f0;text-align:center;margin:0 0 24px;font-size:17px;font-weight:600;text-shadow:0 2px 8px rgba(0,0,0,.8)}
+.card{background:rgba(0,0,0,.25);border-radius:20px;box-shadow:0 10px 30px rgba(0,0,0,.5);padding:24px;margin-bottom:16px;backdrop-filter: blur(8px); border:1px solid rgba(255,255,255,.15)}
+
+.tabs{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-bottom:24px}
+.tab{padding:20px 6px;font-size:18px;border:2px solid rgba(255,255,255,.3);border-radius:16px;background:rgba(255,255,255,.15);cursor:pointer;font-weight:900;text-align:center;line-height:1.3;box-shadow:0 4px 15px rgba(0,0,0,.3);color:#fff;backdrop-filter: blur(5px); transition:.3s}
+.tab.active{background:rgba(13,74,138,.85);color:#fff;border-color:var(--azul); box-shadow:0 6px 20px rgba(13,74,138,.5)}
+.formulario{display:none}
+.formulario.active{display:block}
+  label{font-weight:800;font-size:15px;margin-top:14px;display:block;color:#fff}
+  input,select,textarea{width:100%;padding:16px;border:2px solid rgba(255,255,255,.3);border-radius:12px;margin-top:6px;font-size:16px;background:rgba(255,255,255,.9); color:#000}
+  textarea{resize:vertical;min-height:90px}
+.btn{width:100%;padding:18px;background:var(--azul);color:#fff;border:0;border-radius:12px;font-size:18px;font-weight:900;margin-top:18px;cursor:pointer;box-shadow:0 5px 15px rgba(13,74,138,.4)}
+.btn-verde{background:var(--verde)}
+.btn-sec{background:rgba(120,120,120,.7);margin-top:10px;box-shadow:none}
+.btn:disabled{opacity:.5}
+.ok{background:rgba(26,127,55,.9);color:#fff;padding:16px;border-radius:12px;margin-top:14px;font-weight:800;display:none;text-align:center;font-size:16px}
+.preview{max-width:100%;border-radius:12px;margin-top:10px;display:none;border:3px solid #fff}
+
+.titulo-seccion{font-size:28px;font-weight:900;color:#fff;text-align:center;margin-bottom:24px;text-shadow:0 3px 10px rgba(0,0,0,.8)}
+.grid-ayuda{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.grid-trabajo{display:flex;flex-direction:column;gap:18px}
+
+.opcion-btn{
+  background:rgba(255,255,255,.18); border:2px solid rgba(255,255,255,.4); color:#fff; padding:24px 10px; border-radius:20px;
+  text-align:center; font-weight:900; font-size:16px; cursor:pointer; display:flex; flex-direction:column; align-items:center; gap:12px;
+  box-shadow:0 8px 25px rgba(0,0,0,.3); backdrop-filter: blur(10px); transition:all.3s ease; min-height:140px; justify-content:center; text-decoration:none;
+}
+.opcion-btn:hover{transform:translateY(-6px) scale(1.04); background:rgba(255,255,255,.3); box-shadow:0 16px 35px rgba(13,74,138,.5); border-color:#fff;}
+.opcion-btn.emoji{font-size:48px; text-shadow:0 2px 8px rgba(0,0,0,.5)}
+
+  /* NUEVO: TARJETAS DE OFERTAS */
+ .oferta-card{background:rgba(230,81,0,.25); border:2px solid rgba(255,193,7,.5); border-radius:16px; padding:18px; margin-bottom:14px;}
+ .oferta-card h3{color:#ffc107; margin:0 0 8px; font-size:20px}
+ .oferta-card p{color:#fff; margin:6px 0; font-size:15px}
+ .oferta-card.badge{background:var(--naranja); color:#fff; padding:4px 10px; border-radius:20px; font-size:12px; font-weight:800; display:inline-block; margin-bottom:8px}
+ .sin-ofertas{text-align:center; color:#ccc; padding:20px; font-size:16px}
+
+@media(max-width:500px){
+.grid-ayuda{gap:12px}
+.opcion-btn{min-height:130px;font-size:15px;padding:20px 6px}
+.opcion-btn.emoji{font-size:42px}
+.titulo-seccion{font-size:24px}
+.grid-seguridad{grid-template-columns:1fr!important}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>🏛️ Acción Social 3A</h1>
+  <p class="sub">Municipalidad de Tres Arroyos</p>
+
+  <div class="card">
+    <div class="tabs">
+      <button class="tab active" onclick="cambiarTab('ayuda')">🆘<br>Ayuda</button>
+      <button class="tab" onclick="cambiarTab('trabajo')">💼<br>Trabajo</button>
+    </div>
+
+    <!-- AYUDA -->
+    <div id="ayuda" class="formulario active">
+      <div id="vistaBotones">
+        <h2 class="titulo-seccion">¿Qué necesitás?</h2>
+        <div class="grid-ayuda" id="gridAyuda"></div>
+      </div>
+      <div id="vistaFormulario" style="display:none">
+        <h2 class="titulo-seccion" id="tituloPedido" style="color:#fff;text-shadow:0 2px 6px rgba(0,0,0,.8)"></h2>
+        <form id="formAyuda">
+          <input type="hidden" id="a_tipo">
+          <label>Nombre *</label><input type="text" id="a_nombre" required>
+          <label>Apellido *</label><input type="text" id="a_apellido" required>
+          <label>DNI *</label><input type="text" id="a_dni" required>
+          <label>Número de Teléfono WhatsApp *</label><input type="tel" id="a_tel" required placeholder="2983-XXXXXX">
+          <label>Cantidad que necesita *</label><input type="text" id="a_cantidad" required placeholder="Ej: 2 garrafas, 10 chapas">
+          <label>Detalle del pedido</label><textarea id="a_detalle" placeholder="Explicá tu situación brevemente"></textarea>
+          <label>Adjuntar imagen si es necesario</label><input type="file" id="a_foto" accept="image/*" capture="environment">
+          <img id="prevAyuda" class="preview">
+          <button class="btn" type="submit">Enviar Pedido</button>
+          <button class="btn btn-sec" type="button" onclick="volverBotones()">← Volver</button>
+          <div id="okAyuda" class="ok">✅ Pedido enviado. Te avisamos por WhatsApp.</div>
+        </form>
+      </div>
+    </div>
+
+    <!-- TRABAJO CON OFERTAS -->
+    <div id="trabajo" class="formulario">
+      <h2 class="titulo-seccion">💼 Ofertas de Trabajo</h2>
+
+      <!-- ACA SE LISTAN LAS OFERTAS -->
+      <div id="listaOfertas"></div>
+
+      <hr style="border:1px solid rgba(255,255,255,.2); margin:20px 0">
+
+      <!-- FORM PARA POSTULARSE -->
+      <div id="vistaBotonesTrabajo">
+        <button class="btn btn-verde" onclick="abrirFormTrabajo()">📄 Postularme / Cargar mi CV</button>
+      </div>
+      <div id="formTrabajoWrap" style="display:none;margin-top:16px">
+        <h3 style="color:#fff; text-align:center">Cargar datos para postularte</h3>
+        <form id="formTrabajo">
+          <input type="hidden" id="t_oferta" value="Postulación General">
+          <label>Nombre *</label><input type="text" id="t_nombre" required>
+          <label>Apellido *</label><input type="text" id="t_apellido" required>
+          <label>DNI *</label><input type="text" id="t_dni" required>
+          <label>Teléfono WhatsApp *</label><input type="tel" id="t_tel" required>
+          <label>¿A qué oferta te postulás?</label>
+          <select id="t_rubro">
+            <option value="Postulación General">Postulación General</option>
+          </select>
+          <label>Experiencia / Referencias</label><textarea id="t_exp"></textarea>
+          <label>Foto tuya para el CV</label><input type="file" id="t_foto" accept="image/*" capture="user">
+          <img id="prevTrabajo" class="preview">
+          <button class="btn btn-verde" type="submit">Enviar Postulación</button>
+          <button class="btn btn-sec" type="button" onclick="volverTrabajo()">← Volver</button>
+          <div id="okTrabajo" class="ok">✅ Postulación enviada. Te avisamos por WhatsApp.</div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECCION NUMEROS DE SEGURIDAD -->
+  <div class="card" style="background:rgba(142,36,170,.35); border:1px solid rgba(255,255,255,.25);">
+    <h2 class="titulo-seccion" style="color:#ffc107; margin-bottom:12px;">🚨 Números de Seguridad</h2>
+    <p class="sub" style="margin:0 0 20px; font-size:15px;">En caso de emergencia llame directamente</p>
+    <div class="grid-seguridad" style="display:grid; grid-template-columns:repeat(2,1fr); gap:14px;">
+      <a href="tel:100" class="opcion-btn" style="min-height:120px; background:rgba(220,0,0,.25); border-color:rgba(255,255,255,.5);">
+        <span class="emoji" style="font-size:40px;">🚒</span>100<br><span style="font-size:13px; font-weight:700;">Bomberos</span>
+      </a>
+      <a href="tel:101" class="opcion-btn" style="min-height:120px; background:rgba(0,70,200,.25); border-color:rgba(255,255,255,.5);">
+        <span class="emoji" style="font-size:40px;">👮</span>101<br><span style="font-size:13px; font-weight:700;">Policía</span>
+      </a>
+      <a href="tel:107" class="opcion-btn" style="min-height:120px; background:rgba(0,180,0,.25); border-color:rgba(255,255,255,.5);">
+        <span class="emoji" style="font-size:40px;">🚑</span>107<br><span style="font-size:13px; font-weight:700;">Ambulancia</span>
+      </a>
+      <a href="tel:147" class="opcion-btn" style="min-height:120px; background:rgba(255,193,7,.25); border-color:rgba(255,255,255,.5);">
+        <span class="emoji" style="font-size:40px;">🏛️</span>147<br><span style="font-size:13px; font-weight:700;">Atención Vecino</span>
+      </a>
+    </div>
+  </div>
+
+</div>
+
+<script>
+const KEY = 'pedidos3A';
+const KEY_OFERTAS = 'ofertas3A'; // NUEVO
+let tipoAyudaSeleccionado = '';
+
+function cambiarTab(tab){
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.formulario').forEach(f=>f.classList.remove('active'));
+  event.target.classList.add('active');
+  document.getElementById(tab).classList.add('active');
+  if(tab === 'trabajo') cargarOfertas(); // Carga ofertas al entrar
+}
+
+function guardarPedido(datos){
+  const pedidos = JSON.parse(localStorage.getItem(KEY) || '[]');
+  pedidos.push(datos);
+  localStorage.setItem(KEY, JSON.stringify(pedidos));
+  localStorage.setItem('3A_update', Date.now());
+}
+
+function leerFoto(input, imgPreview){
+  if(input.files[0]){
+    const reader = new FileReader();
+    reader.onload = e => {imgPreview.src=e.target.result; imgPreview.style.display='block';}
+    reader.readAsDataURL(input.files[0]);
+  }
+}
+
+// AYUDA
+const opcionesAyuda = [
+  {emoji:'🛢️',nombre:'Garrafa'},{emoji:'🔥',nombre:'Leña'},{emoji:'🍔',nombre:'Mercadería'},
+  {emoji:'🟦',nombre:'Chapas'},{emoji:'🪵',nombre:'Tirantes'},{emoji:'🛏️',nombre:'Colchones'},{emoji:'🧱',nombre:'Ladrillos'}
+];
+function cargarAyuda(){
+  const grid = document.getElementById('gridAyuda');
+  grid.innerHTML = opcionesAyuda.map(o=>`
+    <button type="button" class="opcion-btn" onclick="abrirFormAyuda('${o.nombre}')">
+      <span class="emoji">${o.emoji}</span>${o.nombre}
+    </button>
+  `).join('');
+}
+function abrirFormAyuda(tipo){
+  tipoAyudaSeleccionado = tipo;
+  document.getElementById('a_tipo').value = tipo;
+  document.getElementById('tituloPedido').innerText = `Pedido: ${tipo}`;
+  document.getElementById('vistaBotones').style.display = 'none';
+  document.getElementById('vistaFormulario').style.display = 'block';
+}
+function volverBotones(){
+  document.getElementById('vistaBotones').style.display = 'block';
+  document.getElementById('vistaFormulario').style.display = 'none';
+  document.getElementById('formAyuda').reset();
+  document.getElementById('prevAyuda').style.display='none';
+}
+
+// TRABAJO - NUEVO
+function cargarOfertas(){
+  const ofertas = JSON.parse(localStorage.getItem(KEY_OFERTAS) || '[]');
+  const contenedor = document.getElementById('listaOfertas');
+  const selectOfertas = document.getElementById('t_rubro');
+
+  if(ofertas.length === 0){
+    contenedor.innerHTML = '<div class="sin-ofertas">📭 No hay ofertas publicadas en este momento. Vuelva pronto.</div>';
+    selectOfertas.innerHTML = '<option value="Postulación General">Postulación General</option>';
+    return;
+  }
+
+  contenedor.innerHTML = ofertas.map(o=>`
+    <div class="oferta-card">
+      <span class="badge">${o.rubro}</span>
+      <h3>${o.titulo}</h3>
+      <p><b>Descripción:</b> ${o.descripcion}</p>
+      <p><b>Requisitos:</b> ${o.requisitos}</p>
+      <p><b>Lugar:</b> ${o.lugar}</p>
+      <button class="btn btn-verde" style="margin-top:10px" onclick="postularAOferta('${o.titulo}')">Postularme a esta oferta</button>
+    </div>
+  `).join('');
+
+  // Cargar select
+  selectOfertas.innerHTML = '<option value="Postulación General">Postulación General</option>' +
+    ofertas.map(o=>`<option value="${o.titulo}">${o.titulo}</option>`).join('');
+}
+
+function postularAOferta(titulo){
+  abrirFormTrabajo();
+  document.getElementById('t_oferta').value = titulo;
+  document.getElementById('t_rubro').value = titulo;
+}
+
+function abrirFormTrabajo(){
+  document.getElementById('vistaBotonesTrabajo').style.display = 'none';
+  document.getElementById('formTrabajoWrap').style.display = 'block';
+}
+function volverTrabajo(){
+  document.getElementById('vistaBotonesTrabajo').style.display = 'block';
+  document.getElementById('formTrabajoWrap').style.display = 'none';
+  document.getElementById('formTrabajo').reset();
+  document.getElementById('prevTrabajo').style.display='none';
+}
+
+document.getElementById('a_foto').onchange = e => leerFoto(e.target, document.getElementById('prevAyuda'));
+document.getElementById('t_foto').onchange = e => leerFoto(e.target, document.getElementById('prevTrabajo'));
+
+document.getElementById('formAyuda').onsubmit = e=>{
+  e.preventDefault();
+  const btn = e.target.querySelector('.btn'); btn.disabled=true;
+  const pedido = {
+    id: Date.now(), tipo: 'Ayuda', ayudaTipo: tipoAyudaSeleccionado,
+    nombre: document.getElementById('a_nombre').value.trim(), apellido: document.getElementById('a_apellido').value.trim(),
+    dni: document.getElementById('a_dni').value.trim(), tel: document.getElementById('a_tel').value.trim(),
+    cantidad: document.getElementById('a_cantidad').value.trim(), detalle: document.getElementById('a_detalle').value.trim(),
+    foto: document.getElementById('prevAyuda').src || '', estado: 'Pendiente', fechaPedido: new Date().toLocaleString('es-AR')
+  };
+  guardarPedido(pedido);
+  document.getElementById('okAyuda').style.display='block';
+  setTimeout(()=>{volverBotones(); btn.disabled=false; document.getElementById('okAyuda').style.display='none';},2500);
+};
+
+document.getElementById('formTrabajo').onsubmit = e=>{
+  e.preventDefault();
+  const btn = e.target.querySelector('.btn'); btn.disabled=true;
+  const pedido = {
+    id: Date.now(), tipo: 'Postulacion', rubro: document.getElementById('t_rubro').value,
+    nombre: document.getElementById('t_nombre').value.trim(), apellido: document.getElementById('t_apellido').value.trim(),
+    dni: document.getElementById('t_dni').value.trim(), tel: document.getElementById('t_tel').value.trim(),
+    experiencia: document.getElementById('t_exp').value.trim(), foto: document.getElementById('prevTrabajo').src || '',
+    estado: 'Pendiente', fechaPedido: new Date().toLocaleString('es-AR')
+  };
+  guardarPedido(pedido);
+  document.getElementById('okTrabajo').style.display='block';
+  setTimeout(()=>{volverTrabajo(); btn.disabled=false; document.getElementById('okTrabajo').style.display='none';},2500);
+};
+
+cargarAyuda();
+</script>
+</body>
+</html>
