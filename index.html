@@ -3,293 +3,535 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>3A - Acción Social Tres Arroyos</title>
+<title>BuscaPatas Necochea</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <style>
-  :root{--azul:#0d4a8a;--verde:#1a7f37;--naranja:#e65100;}
-  *{box-sizing:border-box;font-family:'Segoe UI',Arial,sans-serif}
-  body{
-    margin:0;
-    background: url('muni3a.jpg') no-repeat center fixed;
-    background-size: cover;
-    padding:16px;
-    min-height:100vh;
-  }
-  body::before{content:'';position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.4);z-index:-1;}
-.wrap{max-width:650px;margin:10px auto;background:transparent; padding:0}
-  h1{color:#fff;text-align:center;margin:0 0 6px;font-size:30px;text-shadow:0 3px 10px rgba(0,0,0,.8)}
-.sub{color:#f0f0f0;text-align:center;margin:0 0 24px;font-size:17px;font-weight:600;text-shadow:0 2px 8px rgba(0,0,0,.8)}
-.card{background:rgba(0,0,0,.25);border-radius:20px;box-shadow:0 10px 30px rgba(0,0,0,.5);padding:24px;margin-bottom:16px;backdrop-filter: blur(8px); border:1px solid rgba(255,255,255,.15)}
-
-.tabs{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-bottom:24px}
-.tab{padding:20px 6px;font-size:18px;border:2px solid rgba(255,255,255,.3);border-radius:16px;background:rgba(255,255,255,.15);cursor:pointer;font-weight:900;text-align:center;line-height:1.3;box-shadow:0 4px 15px rgba(0,0,0,.3);color:#fff;backdrop-filter: blur(5px); transition:.3s}
-.tab.active{background:rgba(13,74,138,.85);color:#fff;border-color:var(--azul); box-shadow:0 6px 20px rgba(13,74,138,.5)}
-.formulario{display:none}
-.formulario.active{display:block}
-  label{font-weight:800;font-size:15px;margin-top:14px;display:block;color:#fff}
-  input,select,textarea{width:100%;padding:16px;border:2px solid rgba(255,255,255,.3);border-radius:12px;margin-top:6px;font-size:16px;background:rgba(255,255,255,.9); color:#000}
-  textarea{resize:vertical;min-height:90px}
-.btn{width:100%;padding:18px;background:var(--azul);color:#fff;border:0;border-radius:12px;font-size:18px;font-weight:900;margin-top:18px;cursor:pointer;box-shadow:0 5px 15px rgba(13,74,138,.4)}
-.btn-verde{background:var(--verde)}
-.btn-sec{background:rgba(120,120,120,.7);margin-top:10px;box-shadow:none}
-.btn:disabled{opacity:.5}
-.ok{background:rgba(26,127,55,.9);color:#fff;padding:16px;border-radius:12px;margin-top:14px;font-weight:800;display:none;text-align:center;font-size:16px}
-.preview{max-width:100%;border-radius:12px;margin-top:10px;display:none;border:3px solid #fff}
-
-.titulo-seccion{font-size:28px;font-weight:900;color:#fff;text-align:center;margin-bottom:24px;text-shadow:0 3px 10px rgba(0,0,0,.8)}
-.grid-ayuda{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
-.grid-trabajo{display:flex;flex-direction:column;gap:18px}
-
-.opcion-btn{
-  background:rgba(255,255,255,.18); border:2px solid rgba(255,255,255,.4); color:#fff; padding:24px 10px; border-radius:20px;
-  text-align:center; font-weight:900; font-size:16px; cursor:pointer; display:flex; flex-direction:column; align-items:center; gap:12px;
-  box-shadow:0 8px 25px rgba(0,0,0,.3); backdrop-filter: blur(10px); transition:all.3s ease; min-height:140px; justify-content:center; text-decoration:none;
-}
-.opcion-btn:hover{transform:translateY(-6px) scale(1.04); background:rgba(255,255,255,.3); box-shadow:0 16px 35px rgba(13,74,138,.5); border-color:#fff;}
-.opcion-btn.emoji{font-size:48px; text-shadow:0 2px 8px rgba(0,0,0,.5)}
-
-  /* NUEVO: TARJETAS DE OFERTAS */
- .oferta-card{background:rgba(230,81,0,.25); border:2px solid rgba(255,193,7,.5); border-radius:16px; padding:18px; margin-bottom:14px;}
- .oferta-card h3{color:#ffc107; margin:0 0 8px; font-size:20px}
- .oferta-card p{color:#fff; margin:6px 0; font-size:15px}
- .oferta-card.badge{background:var(--naranja); color:#fff; padding:4px 10px; border-radius:20px; font-size:12px; font-weight:800; display:inline-block; margin-bottom:8px}
- .sin-ofertas{text-align:center; color:#ccc; padding:20px; font-size:16px}
-
-@media(max-width:500px){
-.grid-ayuda{gap:12px}
-.opcion-btn{min-height:130px;font-size:15px;padding:20px 6px}
-.opcion-btn.emoji{font-size:42px}
-.titulo-seccion{font-size:24px}
-.grid-seguridad{grid-template-columns:1fr!important}
+*{margin:0;padding:0;box-sizing:border-box;font-family:system-ui}
+body{background:#f6f6f3;color:#111;overflow-x:hidden}
+header{background:#111;color:#fff;padding:14px 20px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:10;border-bottom:2px solid #ffe600}
+.header-sub{font-size:11px;color:#ffe600;margin-top:3px;font-weight:600}
+#map{height:44vh;z-index:1;border-bottom:3px solid #111}
+.top{padding:10px 16px;display:flex;justify-content:space-between;align-items:center;background:#fff;border-bottom:1px solid #eee}
+.dona{background:#fffbe6;border:2px solid #ffe600;border-radius:16px;padding:16px 14px;margin:12px 16px;text-align:center}
+.dona-btns{display:flex;flex-direction:column;gap:10px;margin:14px 0}
+.btn-donar{display:block;padding:14px;border-radius:12px;text-decoration:none;font-weight:900;font-size:14px;background:#fff;color:#111;border:1.5px solid #ddd;transition:transform 0.1s}
+.btn-donar:active{transform:scale(0.98)}
+.btn-donar-destacado{background:#ffe600;color:#111;border:3px solid #111;padding:17px;font-size:16px;box-shadow:0 4px 12px rgba(0,0,0,0.12)}
+.btn-donar-heroe{background:#111;color:#ffe600;border:2px solid #111;padding:15px}
+.progreso-wrap{margin-top:12px;text-align:left;background:#fff;padding:10px;border-radius:10px;border:1px solid #eee}
+.progreso-bar-bg{width:100%;height:12px;background:#e5e5e5;border-radius:99px;overflow:hidden;margin-top:6px}
+.progreso-bar-fill{width:35%;height:100%;background:#ffe600;border-radius:99px;border-right:2px solid #111}
+.aliasBtn{background:#111;color:#ffe600;padding:10px 18px;border-radius:10px;display:inline-block;font-weight:900;border:2px dashed #ffe600;cursor:pointer;margin-top:12px;font-size:13px}
+.controls{padding:12px 16px;display:flex;gap:8px;background:#fff;border-bottom:1px solid #f5f5f5}
+.controls button{flex:1;padding:15px;border-radius:999px;border:none;font-weight:900;font-size:12px;cursor:pointer}
+.btn-perdido{background:#111;color:#fff}
+.btn-encontrado{background:#ffe600;color:#111;border:2px solid #111}
+.btn-abandonado{background:#ff6b35;color:#fff}
+.ia-barra{display:flex;gap:8px;padding:10px 16px;background:#fff;border-bottom:1px solid #eee}
+.ia-barra button{flex:1;padding:13px;border-radius:14px;border:none;font-weight:900;font-size:11px;cursor:pointer;line-height:1.3}
+.btn-ia-todo{background:#111;color:#ffe600;border:2px solid #ffe600}
+.btn-ia-foto{background:#ffe600;color:#111;border:2px solid #111}
+.tabs{display:flex;gap:6px;padding:12px 16px;background:#fff;position:sticky;top:62px;z-index:5;border-bottom:1px solid #eee}
+.tabs button{flex:1;padding:11px;border-radius:999px;border:2px solid #ddd;background:#fff;font-size:11px;font-weight:800;cursor:pointer}
+.tabs button.act{background:#111;color:#fff;border-color:#111}
+.reencuentros-banner{background:#e8f5e9;border:2px solid #4caf50;color:#1b5e20;padding:12px 16px;margin:12px 16px 0 16px;border-radius:14px;font-weight:900;font-size:14px;text-align:center}
+.list{padding:10px 16px 140px 16px;min-height:30vh}
+.card{background:#fff;border-radius:16px;padding:12px;margin-top:12px;display:flex;gap:12px;box-shadow:0 2px 10px rgba(0,0,0,.06);border:1px solid #f0f0f0}
+.card img{width:74px;height:74px;border-radius:12px;object-fit:cover;background:#eee;flex-shrink:0;cursor:pointer}
+.card-actions{display:flex;gap:6px;margin-top:8px;flex-wrap:wrap}
+.btn-lovi{background:#25D366;color:#fff;padding:7px 12px;border-radius:999px;font-size:11px;font-weight:900;text-decoration:none;display:inline-flex;align-items:center;gap:4px;border:none;cursor:pointer}
+.btn-compartir{background:#fff;color:#111;border:1.5px solid #ccc;padding:7px 12px;border-radius:999px;font-size:11px;font-weight:800;display:inline-flex;align-items:center;gap:4px;cursor:pointer}
+.badge{font-size:10px;padding:4px 8px;border-radius:99px;font-weight:800}
+.badge-fotos{background:#ffe600;color:#111;padding:3px 6px;font-size:9px;margin-left:4px}
+.custom-pin{width:58px;height:58px;border-radius:15px;border:3px solid #fff;box-shadow:0 4px 14px rgba(0,0,0,.4);object-fit:cover;background:#fff}
+.pin-label{position:absolute;bottom:-10px;left:50%;transform:translateX(-50%);font-size:8px;font-weight:900;padding:3px 6px;border-radius:99px;white-space:nowrap}
+.modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.88);z-index:9999;align-items:center;justify-content:center;padding:14px}
+.modal-box{background:#fff;border-radius:24px;padding:22px;width:100%;max-width:440px;max-height:94vh;overflow:auto;position:relative}
+.modal-close-x{position:absolute;top:14px;right:14px;background:#eee;color:#111;border:none;width:36px;height:36px;border-radius:99px;font-size:18px;font-weight:900;cursor:pointer}
+.fotoWrap{margin-top:10px;width:100%;min-height:80px;border-radius:14px;overflow:hidden;background:#eee;display:none;border:1px solid #ddd;padding:6px;flex-wrap:wrap;gap:6px}
+.fotoWrap img{width:72px;height:72px;object-fit:cover;border-radius:8px}
+.btns{display:flex;gap:10px;margin-top:20px}
+.btns button{flex:1;padding:15px;border-radius:999px;border:none;font-weight:800;cursor:pointer}
+.btn-cancel{background:#eee}
+.btn-send{background:#111;color:#fff}
+.opcionesMap{display:flex;flex-direction:column;gap:10px;margin-top:14px}
+.opcionesMap button{padding:16px;border-radius:12px;border:none;font-weight:900;font-size:14px;cursor:pointer}
+.compara{display:flex;gap:10px;margin-top:10px}
+.compara div{flex:1;text-align:center;background:#fafafa;padding:8px;border-radius:12px;border:1px solid #f0f0f0}
+.compara img{width:100%;height:100px;border-radius:10px;object-fit:cover}
+.leaflet-popup-content{width:290px!important}
+.hero-wsp{background:#111;color:#fff;padding:12px 14px;text-align:center;border-bottom:2px solid #ffe600}
+.btn-wsp-hero{background:#25D366;color:#fff;padding:12px 18px;border-radius:999px;font-weight:900;font-size:13px;text-decoration:none;display:inline-block;margin-top:8px}
+.btn-wsp-float{position:fixed;bottom:18px;right:18px;background:#25D366;width:58px;height:58px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:28px;color:#fff;text-decoration:none;box-shadow:0 6px 20px rgba(0,0,0,.35);z-index:9999;border:3px solid #fff}
+.form-group{margin-top:14px}
+.form-group label{display:block;font-size:13px;font-weight:800;color:#111;margin-bottom:5px}
+.form-group input,.form-group textarea{width:100%;padding:13px 14px;border-radius:12px;border:1.5px solid #ddd;background:#fafafa;font-size:14px}
+.ubicacion-box{background:#f7f7f7;border:1px solid #e5e5e5;border-radius:12px;padding:10px 12px;margin-top:6px;display:flex;gap:8px}
+.form-error{font-size:11px;color:#e53935;margin-top:4px;display:none}
+#modalFotoGrande{background:rgba(0,0,0,.94)}
+.fotoGrande-top{position:relative;background:#000;display:flex;align-items:center;justify-content:center}
+.fotoGrande-top img{width:100%;max-height:62vh;object-fit:contain;background:#000;display:block}
+.fotoGrande-close{position:absolute;top:10px;right:10px;background:rgba(0,0,0,.75);color:#fff;border:none;width:36px;height:36px;border-radius:99px;font-size:18px;cursor:pointer;z-index:2}
+.fotoGrande-nav{position:absolute;top:50%;transform:translateY(-50%);background:rgba(255,255,255,.9);color:#111;border:none;width:38px;height:38px;border-radius:99px;font-size:18px;font-weight:900;cursor:pointer;z-index:2}
+#prevFoto{left:10px} #nextFoto{right:10px}
+.fotoGrande-datos{padding:14px;background:#fff}
+#fotoGrandeContador{font-size:11px;color:#888;font-weight:800;margin-top:6px}
+.btn-volvio{margin-top:10px;width:100%;padding:13px;border-radius:999px;border:2px solid #2e7d32;background:#e8f5e9;color:#1b5e20;font-weight:900;font-size:13px;cursor:pointer}
 </style>
 </head>
 <body>
-<div class="wrap">
-  <h1>🏛️ Acción Social 3A</h1>
-  <p class="sub">Municipalidad de Tres Arroyos</p>
+<header>
+  <div>
+    <h1 id="tituloCiudad">🐾 BuscaPatas Necochea</h1>
+    <div class="header-sub">Si no sos de Necochea, pedí el link de tu ciudad</div>
+  </div>
+  <span id="ubiTxt">Cargando...</span>
+</header>
 
-  <div class="card">
-    <div class="tabs">
-      <button class="tab active" onclick="cambiarTab('ayuda')">🆘<br>Ayuda</button>
-      <button class="tab" onclick="cambiarTab('trabajo')">💼<br>Trabajo</button>
-    </div>
+<div class="hero-wsp">
+  <div style="font-size:13px;font-weight:800">¿PERDISTE UN PERRO EN NECOCHEA? <span style="color:#ffe600">MANDALO A SANTI</span></div>
+  <a class="btn-wsp-hero" href="https://wa.me/5492983389710" target="_blank">💬 WHATSAPP 2983 389710</a>
+</div>
 
-    <!-- AYUDA -->
-    <div id="ayuda" class="formulario active">
-      <div id="vistaBotones">
-        <h2 class="titulo-seccion">¿Qué necesitás?</h2>
-        <div class="grid-ayuda" id="gridAyuda"></div>
-      </div>
-      <div id="vistaFormulario" style="display:none">
-        <h2 class="titulo-seccion" id="tituloPedido" style="color:#fff;text-shadow:0 2px 6px rgba(0,0,0,.8)"></h2>
-        <form id="formAyuda">
-          <input type="hidden" id="a_tipo">
-          <label>Nombre *</label><input type="text" id="a_nombre" required>
-          <label>Apellido *</label><input type="text" id="a_apellido" required>
-          <label>DNI *</label><input type="text" id="a_dni" required>
-          <label>Número de Teléfono WhatsApp *</label><input type="tel" id="a_tel" required placeholder="2983-XXXXXX">
-          <label>Cantidad que necesita *</label><input type="text" id="a_cantidad" required placeholder="Ej: 2 garrafas, 10 chapas">
-          <label>Detalle del pedido</label><textarea id="a_detalle" placeholder="Explicá tu situación brevemente"></textarea>
-          <label>Adjuntar imagen si es necesario</label><input type="file" id="a_foto" accept="image/*" capture="environment">
-          <img id="prevAyuda" class="preview">
-          <button class="btn" type="submit">Enviar Pedido</button>
-          <button class="btn btn-sec" type="button" onclick="volverBotones()">← Volver</button>
-          <div id="okAyuda" class="ok">✅ Pedido enviado. Te avisamos por WhatsApp.</div>
-        </form>
-      </div>
-    </div>
-
-    <!-- TRABAJO CON OFERTAS -->
-    <div id="trabajo" class="formulario">
-      <h2 class="titulo-seccion">💼 Ofertas de Trabajo</h2>
-
-      <!-- ACA SE LISTAN LAS OFERTAS -->
-      <div id="listaOfertas"></div>
-
-      <hr style="border:1px solid rgba(255,255,255,.2); margin:20px 0">
-
-      <!-- FORM PARA POSTULARSE -->
-      <div id="vistaBotonesTrabajo">
-        <button class="btn btn-verde" onclick="abrirFormTrabajo()">📄 Postularme / Cargar mi CV</button>
-      </div>
-      <div id="formTrabajoWrap" style="display:none;margin-top:16px">
-        <h3 style="color:#fff; text-align:center">Cargar datos para postularte</h3>
-        <form id="formTrabajo">
-          <input type="hidden" id="t_oferta" value="Postulación General">
-          <label>Nombre *</label><input type="text" id="t_nombre" required>
-          <label>Apellido *</label><input type="text" id="t_apellido" required>
-          <label>DNI *</label><input type="text" id="t_dni" required>
-          <label>Teléfono WhatsApp *</label><input type="tel" id="t_tel" required>
-          <label>¿A qué oferta te postulás?</label>
-          <select id="t_rubro">
-            <option value="Postulación General">Postulación General</option>
-          </select>
-          <label>Experiencia / Referencias</label><textarea id="t_exp"></textarea>
-          <label>Foto tuya para el CV</label><input type="file" id="t_foto" accept="image/*" capture="user">
-          <img id="prevTrabajo" class="preview">
-          <button class="btn btn-verde" type="submit">Enviar Postulación</button>
-          <button class="btn btn-sec" type="button" onclick="volverTrabajo()">← Volver</button>
-          <div id="okTrabajo" class="ok">✅ Postulación enviada. Te avisamos por WhatsApp.</div>
-        </form>
-      </div>
+<div class="dona">
+  <h2 style="font-size:18px;font-weight:900;color:#111">🐾 ¿Te gusta BuscaPatas?</h2>
+  <p style="font-size:13px;color:#444;margin-top:4px">Con tu ayuda seguimos publicando alertas y trayendo perros a casa.</p>
+  <div class="dona-btns">
+    <a class="btn-donar" href="https://mpago.la/1QxrkoE" target="_blank">☕ Donar $500</a>
+    <a class="btn-donar btn-donar-destacado" href="https://mpago.la/2wcWq7C" target="_blank">❤️ Donar $1.000 - La que más ayuda</a>
+    <a class="btn-donar" href="https://mpago.la/2kXZAxp" target="_blank">🏆 Donar $2.000</a>
+    <a class="btn-donar btn-donar-heroe" href="https://mpago.la/28j6nSs" target="_blank">👑 Donar $2.500 - Héroe BuscaPatas</a>
+  </div>
+  <small style="font-size:11px;color:#666;font-weight:700">100% para mantener las alertas prendidas.</small>
+  <div class="progreso-wrap">
+    <div style="font-size:12px;font-weight:800;color:#111">Este mes: $3.500 de $10.000 para mantener las alertas</div>
+    <div class="progreso-bar-bg">
+      <div class="progreso-bar-fill"></div>
     </div>
   </div>
+  <div class="aliasBtn" onclick="copiarAlias()">BUSCAPATASDONACION</div>
+</div>
 
-  <!-- SECCION NUMEROS DE SEGURIDAD -->
-  <div class="card" style="background:rgba(142,36,170,.35); border:1px solid rgba(255,255,255,.25);">
-    <h2 class="titulo-seccion" style="color:#ffc107; margin-bottom:12px;">🚨 Números de Seguridad</h2>
-    <p class="sub" style="margin:0 0 20px; font-size:15px;">En caso de emergencia llame directamente</p>
-    <div class="grid-seguridad" style="display:grid; grid-template-columns:repeat(2,1fr); gap:14px;">
-      <a href="tel:100" class="opcion-btn" style="min-height:120px; background:rgba(220,0,0,.25); border-color:rgba(255,255,255,.5);">
-        <span class="emoji" style="font-size:40px;">🚒</span>100<br><span style="font-size:13px; font-weight:700;">Bomberos</span>
-      </a>
-      <a href="tel:101" class="opcion-btn" style="min-height:120px; background:rgba(0,70,200,.25); border-color:rgba(255,255,255,.5);">
-        <span class="emoji" style="font-size:40px;">👮</span>101<br><span style="font-size:13px; font-weight:700;">Policía</span>
-      </a>
-      <a href="tel:107" class="opcion-btn" style="min-height:120px; background:rgba(0,180,0,.25); border-color:rgba(255,255,255,.5);">
-        <span class="emoji" style="font-size:40px;">🚑</span>107<br><span style="font-size:13px; font-weight:700;">Ambulancia</span>
-      </a>
-      <a href="tel:147" class="opcion-btn" style="min-height:120px; background:rgba(255,193,7,.25); border-color:rgba(255,255,255,.5);">
-        <span class="emoji" style="font-size:40px;">🏛️</span>147<br><span style="font-size:13px; font-weight:700;">Atención Vecino</span>
-      </a>
+<div id="map"></div>
+<div class="top"><span id="filtroTxt">Tocá foto → ver grande</span><span id="contadorTxt" style="background:#111;color:#ffe600;padding:6px 10px;border-radius:99px;font-size:11px;font-weight:900">0 perdidos</span></div>
+<div class="ia-barra"><button class="btn-ia-todo" onclick="buscarTodoConIA()">🔍 BUSCAR IA</button><button class="btn-ia-foto" onclick="abrirSoloFoto()">📸 SOLO FOTO</button></div>
+<div class="controls"><button class="btn-perdido" onclick="abrirForm('PERDIDO')">+ PERDÍ</button><button class="btn-encontrado" onclick="abrirForm('ENCONTRADO')">+ ENCONTRÉ</button><button class="btn-abandonado" onclick="abrirForm('ABANDONADO')">+ ABANDONADO</button></div>
+<div class="tabs"><button id="tab-TODOS" class="act" onclick="setFiltro('TODOS')">Todos</button><button id="tab-PERDIDO" onclick="setFiltro('PERDIDO')">Perdidos</button><button id="tab-ENCONTRADO" onclick="setFiltro('ENCONTRADO')">Encontr.</button><button id="tab-ABANDONADO" onclick="setFiltro('ABANDONADO')">Aband.</button></div>
+
+<div id="reencuentrosBanner" class="reencuentros-banner">Ayudanos a lograr el primer reencuentro</div>
+
+<div class="list" id="lista"></div>
+<a class="btn-wsp-float" href="https://wa.me/5492983389710" target="_blank">💬</a>
+
+<div id="modalMapa" class="modal-bg"><div class="modal-box" style="text-align:center"><h2>📍 ¿Qué pasó acá?</h2><p id="coordTxt"></p><div class="opcionesMap"><button class="btn-perdido" onclick="desdeMapa('PERDIDO')">😢 PERDÍ acá</button><button class="btn-encontrado" onclick="desdeMapa('ENCONTRADO')">🙏 ENCONTRÉ acá</button><button class="btn-abandonado" onclick="desdeMapa('ABANDONADO')">💔 ABANDONADO acá</button><button class="btn-cancel" style="padding:12px;border-radius:12px;border:none" onclick="closeModal('modalMapa')">Cancelar</button></div></div></div>
+
+<div id="formModal" class="modal-bg"><div class="modal-box"><h2 id="formTitle">Título</h2><div class="form-group"><label>Nombre *</label><input id="fNombre" type="text" placeholder="Ej: Milo"></div><div class="form-group"><label>Descripción</label><textarea id="fDesc" rows="3"></textarea></div><div class="form-group"><label>WhatsApp *</label><input id="fContacto" type="tel" placeholder="2262..."></div><div class="form-group"><label>Fotos (hasta 5) *</label><input id="fFoto" type="file" accept="image/*" multiple onchange="previewFoto(event)"><div class="fotoWrap" id="fotoWrap"></div><small style="font-size:10px;color:#888">Tocá para elegir varias fotos del mismo perro</small></div><div class="form-group"><label>Ubicación</label><div class="ubicacion-box"><span id="fLatLngTexto">Cargando...</span></div><input id="fLatLng" type="hidden"></div><div class="btns"><button class="btn-cancel" onclick="closeModal('formModal')">Cancelar</button><button class="btn-send" id="btnSend" onclick="guardar()">SUBIR AL MAPA</button></div></div></div>
+
+<div id="soloFotoModal" class="modal-bg"><div class="modal-box" style="text-align:center"><h2>📸 Solo foto</h2><input id="fSoloFoto" type="file" accept="image/*" onchange="buscarSoloConFoto(event)"><div class="fotoWrap" id="fotoWrap2" style="display:none;margin-top:10px"><img id="fotoPrev2"></div><button class="btn-cancel" style="width:100%;margin-top:12px;padding:12px;border-radius:999px;border:none" onclick="closeModal('soloFotoModal')">Cerrar</button></div></div>
+
+<div id="modalMatch" class="modal-bg"><div class="modal-box"><h2 id="matchTitle"></h2><p id="matchSub"></p><div id="matchLista"></div><button onclick="closeModal('modalMatch')" style="margin-top:12px;width:100%;padding:12px;border-radius:999px;border:none;background:#111;color:#fff">Cerrar</button></div></div>
+
+<div id="modalFotoGrande" class="modal-bg">
+  <div class="modal-box" style="padding:0;overflow:hidden;max-width:480px">
+    <div class="fotoGrande-top">
+      <img id="fotoGrandeImg" src="">
+      <button class="fotoGrande-close" onclick="cerrarModoFoto()">✕</button>
+      <button id="prevFoto" class="fotoGrande-nav" onclick="cambiarFoto(-1)">‹</button>
+      <button id="nextFoto" class="fotoGrande-nav" onclick="cambiarFoto(1)">›</button>
+    </div>
+    <div class="fotoGrande-datos">
+      <h3 id="fotoGrandeNombre"></h3>
+      <div id="fotoGrandeContador"></div>
+      <div id="fotoGrandeDesc" style="font-size:12px;color:#444;margin-top:6px"></div>
+      <div style="display:flex;gap:8px;margin-top:12px">
+        <a id="fotoGrandeLoVi" href="#" target="_blank" class="btn-lovi" style="flex:1;justify-content:center;padding:11px;font-size:12px">👀 LO VI</a>
+        <button id="fotoGrandeCompartir" class="btn-compartir" style="flex:1;justify-content:center;padding:11px;font-size:12px">↗️ COMPARTIR</button>
+      </div>
+      <a id="fotoGrandeTel" href="#" target="_blank" style="display:block;margin-top:8px;background:#111;color:#ffe600;padding:11px;border-radius:999px;text-decoration:none;font-weight:800;text-align:center;font-size:13px">WhatsApp</a>
+      <button id="btnYaVolvio" class="btn-volvio" onclick="marcarYaVolvio()">✅ YA VOLVIÓ A CASA 🎉</button>
+      <button style="margin-top:8px;width:100%;padding:11px;border-radius:999px;border:none;background:#eee;color:#111;font-weight:800;cursor:pointer" onclick="cerrarModoFoto()">Cerrar</button>
     </div>
   </div>
+</div>
 
+<!-- MODAL GRACIAS DESPUÉS DE PUBLICAR (OPCIONAL) -->
+<div id="modalGracias" class="modal-bg">
+  <div class="modal-box" style="text-align:center">
+    <button class="modal-close-x" onclick="closeModal('modalGracias')">✕</button>
+    <h2 style="font-size:20px;font-weight:900;margin-top:8px">🎉 ¡Listo! Ya está en el mapa</h2>
+    <p style="font-size:13px;color:#444;margin-top:8px;line-height:1.4">Si querés, nos ayudás a mantener BuscaPatas prendido. Si no, no pasa nada, tu publicación ya quedó subida.</p>
+    <div class="dona-btns">
+      <a class="btn-donar" href="https://mpago.la/1QxrkoE" target="_blank">☕ Donar $500</a>
+      <a class="btn-donar btn-donar-destacado" href="https://mpago.la/2wcWq7C" target="_blank">❤️ Donar $1.000 - La que más ayuda</a>
+      <a class="btn-donar" href="https://mpago.la/2kXZAxp" target="_blank">🏆 Donar $2.000</a>
+      <a class="btn-donar btn-donar-heroe" href="https://mpago.la/28j6nSs" target="_blank">👑 Donar $2.500 - Héroe BuscaPatas</a>
+    </div>
+    <button id="btnCompartirNueva" style="width:100%;padding:14px;border-radius:999px;border:none;background:#25D366;color:#fff;font-weight:900;font-size:14px;cursor:pointer;margin-top:4px">↗️ Compartir mi publicación</button>
+    <button onclick="closeModal('modalGracias')" style="width:100%;padding:12px;border-radius:999px;border:none;background:#eee;color:#555;font-weight:800;font-size:13px;cursor:pointer;margin-top:8px">No gracias, cerrar</button>
+  </div>
 </div>
 
 <script>
-const KEY = 'pedidos3A';
-const KEY_OFERTAS = 'ofertas3A'; // NUEVO
-let tipoAyudaSeleccionado = '';
+// CAMBIAR API_URL PARA NECOCHEA
+const API_URL='https://script.google.com/macros/s/AKfycbwkSukpwgNRgEvkDwbCB-k3KBsRevo7KMZDxaV9KeXrTyvHBq1tad5Sou5iKRB4AHGNRg/exec';
+const CIUDAD_FILTRO=new URLSearchParams(location.search).get('ciudad')||'Necochea';
+document.getElementById('tituloCiudad').innerText='🐾 BuscaPatas '+CIUDAD_FILTRO;
+const map=L.map('map').setView([-38.5545,-58.7396],13);
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19}).addTo(map);
 
-function cambiarTab(tab){
-  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
-  document.querySelectorAll('.formulario').forEach(f=>f.classList.remove('active'));
-  event.target.classList.add('active');
-  document.getElementById(tab).classList.add('active');
-  if(tab === 'trabajo') cargarOfertas(); // Carga ofertas al entrar
-}
+let KEY='buscapatas_necochea';
+let mascotas=[];try{mascotas=JSON.parse(localStorage.getItem(KEY)||'[]')}catch(e){mascotas=[];try{localStorage.removeItem(KEY)}catch(e2){}}
+let currentTipo='PERDIDO',tempLatLng=null,tempFotos=[],userPos=null,filtro='TODOS',tempHash=null;
+let markers=[];
+let galeriaActual=[],indiceActual=0,mascotaActualId=null;
+let publicacionesMostradasModal=new Set();
 
-function guardarPedido(datos){
-  const pedidos = JSON.parse(localStorage.getItem(KEY) || '[]');
-  pedidos.push(datos);
-  localStorage.setItem(KEY, JSON.stringify(pedidos));
-  localStorage.setItem('3A_update', Date.now());
-}
+function openModal(id){document.getElementById(id).style.display='flex'}
+function closeModal(id){document.getElementById(id).style.display='none'}
+function abrirSoloFoto(){openModal('soloFotoModal')}
+function copiarAlias(){navigator.clipboard.writeText('BUSCAPATASDONACION');alert('Copiado: BUSCAPATASDONACION')}
 
-function leerFoto(input, imgPreview){
-  if(input.files[0]){
-    const reader = new FileReader();
-    reader.onload = e => {imgPreview.src=e.target.result; imgPreview.style.display='block';}
-    reader.readAsDataURL(input.files[0]);
+function compartirMascota(nombre){
+  const texto=`Se perdió ${nombre} en Necochea, ayudá a compartir 🐾`;
+  const url=window.location.href;
+  if(navigator.share){
+    navigator.share({title:'BuscaPatas Necochea',text:texto,url:url}).catch(()=>{});
+  }else{
+    navigator.clipboard.writeText(texto+' '+url);
+    alert('Link copiado para compartir: '+texto);
   }
 }
 
-// AYUDA
-const opcionesAyuda = [
-  {emoji:'🛢️',nombre:'Garrafa'},{emoji:'🔥',nombre:'Leña'},{emoji:'🍔',nombre:'Mercadería'},
-  {emoji:'🟦',nombre:'Chapas'},{emoji:'🪵',nombre:'Tirantes'},{emoji:'🛏️',nombre:'Colchones'},{emoji:'🧱',nombre:'Ladrillos'}
-];
-function cargarAyuda(){
-  const grid = document.getElementById('gridAyuda');
-  grid.innerHTML = opcionesAyuda.map(o=>`
-    <button type="button" class="opcion-btn" onclick="abrirFormAyuda('${o.nombre}')">
-      <span class="emoji">${o.emoji}</span>${o.nombre}
-    </button>
-  `).join('');
-}
-function abrirFormAyuda(tipo){
-  tipoAyudaSeleccionado = tipo;
-  document.getElementById('a_tipo').value = tipo;
-  document.getElementById('tituloPedido').innerText = `Pedido: ${tipo}`;
-  document.getElementById('vistaBotones').style.display = 'none';
-  document.getElementById('vistaFormulario').style.display = 'block';
-}
-function volverBotones(){
-  document.getElementById('vistaBotones').style.display = 'block';
-  document.getElementById('vistaFormulario').style.display = 'none';
-  document.getElementById('formAyuda').reset();
-  document.getElementById('prevAyuda').style.display='none';
-}
-
-// TRABAJO - NUEVO
-function cargarOfertas(){
-  const ofertas = JSON.parse(localStorage.getItem(KEY_OFERTAS) || '[]');
-  const contenedor = document.getElementById('listaOfertas');
-  const selectOfertas = document.getElementById('t_rubro');
-
-  if(ofertas.length === 0){
-    contenedor.innerHTML = '<div class="sin-ofertas">📭 No hay ofertas publicadas en este momento. Vuelva pronto.</div>';
-    selectOfertas.innerHTML = '<option value="Postulación General">Postulación General</option>';
-    return;
+function guardarLocalSeguro(){
+  try{
+    localStorage.removeItem(KEY);
+    let sinFotos = mascotas.map(m=>({...m, fotos:[], foto:''}));
+    localStorage.setItem(KEY, JSON.stringify(sinFotos));
+  }catch(e){
+    console.error('No se pudo guardar local', e);
+    try{localStorage.removeItem(KEY)}catch(e2){}
   }
-
-  contenedor.innerHTML = ofertas.map(o=>`
-    <div class="oferta-card">
-      <span class="badge">${o.rubro}</span>
-      <h3>${o.titulo}</h3>
-      <p><b>Descripción:</b> ${o.descripcion}</p>
-      <p><b>Requisitos:</b> ${o.requisitos}</p>
-      <p><b>Lugar:</b> ${o.lugar}</p>
-      <button class="btn btn-verde" style="margin-top:10px" onclick="postularAOferta('${o.titulo}')">Postularme a esta oferta</button>
-    </div>
-  `).join('');
-
-  // Cargar select
-  selectOfertas.innerHTML = '<option value="Postulación General">Postulación General</option>' +
-    ofertas.map(o=>`<option value="${o.titulo}">${o.titulo}</option>`).join('');
 }
 
-function postularAOferta(titulo){
-  abrirFormTrabajo();
-  document.getElementById('t_oferta').value = titulo;
-  document.getElementById('t_rubro').value = titulo;
+async function cargarDeSheet(){
+ try{
+  const r=await fetch(API_URL);
+  const d=await r.json();
+  let delSheet=d.map(row=>{
+   let fotosArr=[];
+   if(row.fotos && Array.isArray(row.fotos) && row.fotos.length>0) fotosArr=row.fotos;
+   else if(row.foto) fotosArr=[row.foto];
+   return {id:row.id,tipo:row.tipo,nombre:row.nombre,desc:row.desc,contacto:row.contacto,lat:parseFloat(row.lat),lng:parseFloat(row.lng),foto:row.foto,fotos:fotosArr,iaHash:row.iaHash||{hash:[]},fecha:row.fecha,ciudad:row.ciudad||'Necochea',encontrado:row.encontrado===true||row.encontrado==='true'||row.encontrado==='TRUE'}
+  }).filter(p=>p.lat);
+  mascotas=delSheet;
+  guardarLocalSeguro();
+  render();
+  document.getElementById('ubiTxt').innerText='✅ '+delSheet.length+' del Sheet';
+ }catch(e){
+  render();
+  document.getElementById('ubiTxt').innerText='📦 Local ('+mascotas.length+')';
+ }
+}
+cargarDeSheet();
+
+if(navigator.geolocation){
+  navigator.geolocation.getCurrentPosition(p=>{
+    userPos={lat:p.coords.latitude,lng:p.coords.longitude};
+    document.getElementById('ubiTxt').innerText='📍 Ubicación lista';
+    map.setView(userPos,14);
+  });
 }
 
-function abrirFormTrabajo(){
-  document.getElementById('vistaBotonesTrabajo').style.display = 'none';
-  document.getElementById('formTrabajoWrap').style.display = 'block';
+map.on('click',e=>{
+  tempLatLng={lat:e.latlng.lat,lng:e.latlng.lng};
+  let txt=tempLatLng.lat.toFixed(5)+','+tempLatLng.lng.toFixed(5);
+  document.getElementById('fLatLng').value=txt;
+  document.getElementById('fLatLngTexto').innerText=txt;
+  document.getElementById('coordTxt').innerText='📍 '+txt;
+  openModal('modalMapa');
+});
+
+function desdeMapa(t){closeModal('modalMapa');abrirForm(t);}
+
+function abrirForm(t){
+ currentTipo=t;
+ if(!tempLatLng){
+   if(userPos) tempLatLng=userPos;
+   else{let c=map.getCenter();tempLatLng={lat:c.lat,lng:c.lng};}
+ }
+ document.getElementById('formTitle').innerText='SUBIR COMO '+t;
+ let txt=tempLatLng.lat.toFixed(5)+','+tempLatLng.lng.toFixed(5);
+ document.getElementById('fLatLng').value=txt;
+ document.getElementById('fLatLngTexto').innerText=txt;
+ document.getElementById('btnSend').innerText='SUBIR COMO '+t;
+ tempFotos=[];
+ document.getElementById('fotoWrap').innerHTML='';
+ document.getElementById('fotoWrap').style.display='none';
+ openModal('formModal');
 }
-function volverTrabajo(){
-  document.getElementById('vistaBotonesTrabajo').style.display = 'block';
-  document.getElementById('formTrabajoWrap').style.display = 'none';
-  document.getElementById('formTrabajo').reset();
-  document.getElementById('prevTrabajo').style.display='none';
+
+function previewFoto(ev){
+ const files=Array.from(ev.target.files).slice(0,5);
+ tempFotos=[];
+ const wrap=document.getElementById('fotoWrap');
+ wrap.innerHTML='';
+ wrap.style.display='flex';
+ let loaded=0;
+ files.forEach(file=>{
+   const reader=new FileReader();
+   reader.onload=e=>{
+     tempFotos.push(e.target.result);
+     let img=document.createElement('img');
+     img.src=e.target.result;
+     wrap.appendChild(img);
+     loaded++;
+     if(loaded==1) calcularHashIA(e.target.result,h=>tempHash=h);
+   };
+   reader.readAsDataURL(file);
+ });
 }
 
-document.getElementById('a_foto').onchange = e => leerFoto(e.target, document.getElementById('prevAyuda'));
-document.getElementById('t_foto').onchange = e => leerFoto(e.target, document.getElementById('prevTrabajo'));
+function calcularHashIA(dataUrl,cb){
+ const img=new Image();
+ img.onload=()=>{
+  const c=document.createElement('canvas');c.width=16;c.height=16;
+  const ctx=c.getContext('2d');ctx.drawImage(img,0,0,16,16);
+  const d=ctx.getImageData(0,0,16,16).data;
+  let grays=[];let sum=0;
+  for(let i=0;i<d.length;i+=4){let g=(d[i]+d[i+1]+d[i+2])/3;grays.push(g);sum+=g;}
+  let avg=sum/grays.length;
+  let bits=grays.map(v=>v>avg?1:0);
+  cb({hash:bits,gray:grays,avg:avg});
+ };
+ img.src=dataUrl;
+}
 
-document.getElementById('formAyuda').onsubmit = e=>{
-  e.preventDefault();
-  const btn = e.target.querySelector('.btn'); btn.disabled=true;
-  const pedido = {
-    id: Date.now(), tipo: 'Ayuda', ayudaTipo: tipoAyudaSeleccionado,
-    nombre: document.getElementById('a_nombre').value.trim(), apellido: document.getElementById('a_apellido').value.trim(),
-    dni: document.getElementById('a_dni').value.trim(), tel: document.getElementById('a_tel').value.trim(),
-    cantidad: document.getElementById('a_cantidad').value.trim(), detalle: document.getElementById('a_detalle').value.trim(),
-    foto: document.getElementById('prevAyuda').src || '', estado: 'Pendiente', fechaPedido: new Date().toLocaleString('es-AR')
-  };
-  guardarPedido(pedido);
-  document.getElementById('okAyuda').style.display='block';
-  setTimeout(()=>{volverBotones(); btn.disabled=false; document.getElementById('okAyuda').style.display='none';},2500);
-};
+function compararIA(h1,h2){
+ if(!h1||!h2||!h1.hash||h1.hash.length<10)return 0;
+ function aBits(h){if(Math.max(...h.hash)<=1)return h.hash;let arr=h.gray&&h.gray.length?h.gray:h.hash;let avg=h.avg||arr.reduce((a,b)=>a+b,0)/arr.length;return arr.map(v=>v>avg?1:0);}
+ let b1=aBits(h1),b2=aBits(h2),len=Math.min(b1.length,b2.length),diff=0;
+ for(let i=0;i<len;i++)if(b1[i]!==b2[i])diff++;
+ if(diff===0)return 99;if(diff<=3)return 96;if(diff<=10)return 88;if(diff>80)return 5;
+ return Math.round(Math.max(5,100-(diff/len*100)));
+}
+function distancia(a,b){const R=6371;const dLat=(b.lat-a.lat)*Math.PI/180;const dLng=(b.lng-a.lng)*Math.PI/180;const h=Math.sin(dLat/2)**2+Math.cos(a.lat*Math.PI/180)*Math.cos(b.lat*Math.PI/180)*Math.sin(dLng/2)**2;return 2*R*Math.asin(Math.sqrt(h))}
+function scoreTotal(p,e){let sFoto=compararIA(p.iaHash,e.iaHash);if(sFoto<55)return{score:sFoto};let score=sFoto;let km=distancia(p,e);if(km<5)score+=10;return{score:Math.min(Math.round(score),99),km}}
 
-document.getElementById('formTrabajo').onsubmit = e=>{
-  e.preventDefault();
-  const btn = e.target.querySelector('.btn'); btn.disabled=true;
-  const pedido = {
-    id: Date.now(), tipo: 'Postulacion', rubro: document.getElementById('t_rubro').value,
-    nombre: document.getElementById('t_nombre').value.trim(), apellido: document.getElementById('t_apellido').value.trim(),
-    dni: document.getElementById('t_dni').value.trim(), tel: document.getElementById('t_tel').value.trim(),
-    experiencia: document.getElementById('t_exp').value.trim(), foto: document.getElementById('prevTrabajo').src || '',
-    estado: 'Pendiente', fechaPedido: new Date().toLocaleString('es-AR')
-  };
-  guardarPedido(pedido);
-  document.getElementById('okTrabajo').style.display='block';
-  setTimeout(()=>{volverTrabajo(); btn.disabled=false; document.getElementById('okTrabajo').style.display='none';},2500);
-};
+function comprimirFoto(dataUrl, maxW=600, calidad=0.5){
+  return new Promise(res=>{
+    const img=new Image();
+    img.onload=()=>{
+      try{
+        let w=img.width, h=img.height;
+        if(w>maxW){ h=h*maxW/w; w=maxW; }
+        const c=document.createElement('canvas'); c.width=w; c.height=h;
+        c.getContext('2d').drawImage(img,0,0,w,h);
+        res(c.toDataURL('image/jpeg',calidad));
+      }catch(e){ res(dataUrl); }
+    };
+    img.onerror=()=>res(dataUrl);
+    img.src=dataUrl;
+  });
+}
 
-cargarAyuda();
+async function guardar(){
+  try{
+    const btn=document.getElementById('btnSend');
+    btn.disabled=true;
+    btn.innerText='SUBIENDO...';
+    let nombre=document.getElementById('fNombre').value.trim();
+    let desc=document.getElementById('fDesc').value.trim();
+    let contacto=document.getElementById('fContacto').value.trim();
+    if(!nombre){ alert('Poné un nombre'); btn.disabled=false; btn.innerText='SUBIR AL MAPA'; return; }
+    if(!contacto){ alert('Poné tu WhatsApp'); btn.disabled=false; btn.innerText='SUBIR AL MAPA'; return; }
+    if(tempFotos.length==0){ alert('Subí al menos 1 foto y esperá a que aparezca la miniatura'); btn.disabled=false; btn.innerText='SUBIR AL MAPA'; return; }
+    if(!tempLatLng){ if(userPos) tempLatLng=userPos; else { let c=map.getCenter(); tempLatLng={lat:c.lat,lng:c.lng}; } }
+    let fotosComprimidas=[];
+    for(let f of tempFotos){
+      fotosComprimidas.push(await comprimirFoto(f));
+    }
+    let nueva={id:Date.now(),tipo:currentTipo,nombre:nombre,desc:desc,contacto:contacto,lat:tempLatLng.lat,lng:tempLatLng.lng,foto:fotosComprimidas[0],fotos:fotosComprimidas,iaHash:tempHash||{hash:[]},fecha:Date.now(),ciudad:CIUDAD_FILTRO,encontrado:false};
+    mascotas.push(nueva);
+    guardarLocalSeguro();
+    filtro='TODOS';
+    document.querySelectorAll('.tabs button').forEach(b=>b.classList.remove('act'));
+    document.getElementById('tab-TODOS').classList.add('act');
+    render();
+    closeModal('formModal');
+    document.getElementById('fNombre').value='';document.getElementById('fDesc').value='';document.getElementById('fContacto').value='';document.getElementById('fFoto').value='';document.getElementById('fotoWrap').style.display='none';
+    tempFotos=[];tempHash=null;
+    try{
+      await fetch(API_URL,{
+        method:'POST',
+        mode:'no-cors',
+        headers:{'Content-Type':'text/plain;charset=utf-8'},
+        body: JSON.stringify({action:'add', data:nueva})
+      });
+    }catch(e){ console.log('Error al subir al Sheet', e); }
+    btn.disabled=false;
+    btn.innerText='SUBIR AL MAPA';
+    if(!publicacionesMostradasModal.has(nueva.id)){
+      publicacionesMostradasModal.add(nueva.id);
+      document.getElementById('btnCompartirNueva').onclick=()=>compartirMascota(nueva.nombre);
+      openModal('modalGracias');
+    }
+  }catch(err){
+    alert('Error: '+err.message);
+    let btn=document.getElementById('btnSend');
+    if(btn){ btn.disabled=false; btn.innerText='SUBIR AL MAPA'; }
+  }
+}
+
+function render(){
+ markers.forEach(m=>map.removeLayer(m));
+ markers=[];
+ document.getElementById('lista').innerHTML='';
+
+ let totalReencuentros=mascotas.filter(m=>m.encontrado==true).length;
+ let bannerReencuentros=document.getElementById('reencuentrosBanner');
+ if(totalReencuentros>0){
+   bannerReencuentros.innerText=`🎉 Ya volvieron ${totalReencuentros} a casa`;
+ }else{
+   bannerReencuentros.innerText='Ayudanos a lograr el primer reencuentro';
+ }
+
+ let filtradas=mascotas.filter(m=>{
+   if(m.encontrado==true) return false;
+   if(filtro!='TODOS'&&m.tipo!=filtro) return false;
+   return true;
+ });
+ document.getElementById('contadorTxt').innerText=filtradas.length+' en '+filtro;
+ filtradas.forEach(m=>{
+  let fotosArr=m.fotos && m.fotos.length?m.fotos:(m.foto?[m.foto]:[]);
+  let foto=fotosArr[0]||'https://placehold.co/100?text=🐾';
+  let bg=m.tipo=='PERDIDO'?'#111':m.tipo=='ENCONTRADO'?'#ffe600':'#ff6b35';
+  let col=m.tipo=='PERDIDO'?'#fff':m.tipo=='ENCONTRADO'?'#111':'#fff';
+  let iconHtml=`<div style="position:relative"><img src="${foto}" class="custom-pin" style="border-color:${bg}"><div class="pin-label" style="background:${bg};color:${col}">${m.tipo}${fotosArr.length>1?' +'+fotosArr.length:''}</div></div>`;
+  let icon=L.divIcon({html:iconHtml,className:'',iconSize:[54,54],iconAnchor:[27,48]});
+  let telLimpio=String(m.contacto||'').replace(/\D/g,'');
+  let ubicacionTexto=m.desc?m.desc:(m.ciudad||'Necochea');
+  let msgLoVi=encodeURIComponent(`Hola, creo que vi a ${m.nombre} en ${ubicacionTexto}`);
+  let nombreEscapado=String(m.nombre||'').replace(/'/g,"\\'");
+  let mk=L.marker([m.lat,m.lng],{icon}).addTo(map);
+  mk.on('click', ()=> verFotoGrande(m.id));
+  mk.bindPopup(`<img src="${foto}" onclick="verFotoGrande('${m.id}')" style="width:100%;height:120px;object-fit:cover;border-radius:12px;margin-bottom:8px;cursor:pointer"><b>${m.nombre}</b><br>${m.tipo}<br><a href="https://wa.me/549${telLimpio}" target="_blank">📱 ${m.contacto}</a><div class="card-actions" style="margin-top:8px"><a class="btn-lovi" href="https://wa.me/549${telLimpio}?text=${msgLoVi}" target="_blank">👀 LO VI</a><button class="btn-compartir" onclick="compartirMascota('${nombreEscapado}')">↗️ COMPARTIR</button></div>`);
+  markers.push(mk);
+ });
+ filtradas.slice().reverse().forEach(m=>{
+  let fotosArr=m.fotos && m.fotos.length?m.fotos:(m.foto?[m.foto]:[]);
+  let foto=fotosArr[0]||'https://placehold.co/100?text=🐾';
+  let telLimpio=String(m.contacto||'').replace(/\D/g,'');
+  let ubicacionTexto=m.desc?m.desc:(m.ciudad||'Necochea');
+  let msgLoVi=encodeURIComponent(`Hola, creo que vi a ${m.nombre} en ${ubicacionTexto}`);
+  let nombreEscapado=String(m.nombre||'').replace(/'/g,"\\'");
+  let div=document.createElement('div');
+  div.className='card';
+  div.innerHTML=`<img src="${foto}" onclick="verFotoGrande('${m.id}')"><div style="flex:1"><span class="badge" style="background:#111;color:#fff">${m.tipo}</span> ${fotosArr.length>1?`<span class="badge-fotos">📸 ${fotosArr.length}</span>`:''} <b>${m.nombre}</b><br><small>${m.desc||''}</small><br><small>📱 ${m.contacto}</small><div class="card-actions"><a class="btn-lovi" href="https://wa.me/549${telLimpio}?text=${msgLoVi}" target="_blank">👀 LO VI</a><button class="btn-compartir" onclick="compartirMascota('${nombreEscapado}')">↗️ COMPARTIR</button></div></div>`;
+  document.getElementById('lista').appendChild(div);
+ });
+ if(filtradas.length==0){
+   document.getElementById('lista').innerHTML='<p style="text-align:center;color:#999;margin-top:20px">No hay datos en '+filtro+'</p>';
+ }
+}
+
+function setFiltro(f){
+  filtro=f;
+  document.querySelectorAll('.tabs button').forEach(b=>b.classList.remove('act'));
+  document.getElementById('tab-'+f).classList.add('act');
+  render();
+}
+
+window.verFotoGrande=function(id){
+  let m=mascotas.find(x=>String(x.id)==String(id));
+  if(!m) return;
+  mascotaActualId = m.id;
+  let fotosArr=m.fotos && m.fotos.length?m.fotos:(m.foto?[m.foto]:[]);
+  galeriaActual=fotosArr;
+  indiceActual=0;
+  mostrarFotoActual(m);
+  openModal('modalFotoGrande');
+}
+function mostrarFotoActual(m){
+  if(!m || galeriaActual.length==0) return;
+  mascotaActualId = m.id;
+  document.getElementById('fotoGrandeImg').src=galeriaActual[indiceActual];
+  document.getElementById('fotoGrandeNombre').innerText=m.nombre;
+  document.getElementById('fotoGrandeDesc').innerText=m.desc||'';
+  document.getElementById('fotoGrandeContador').innerText=(indiceActual+1)+'/'+galeriaActual.length;
+  let telLimpio=String(m.contacto||'').replace(/\D/g,'');
+  let ubicacionTexto=m.desc?m.desc:(m.ciudad||'Necochea');
+  let msgLoVi=encodeURIComponent(`Hola, creo que vi a ${m.nombre} en ${ubicacionTexto}`);
+  document.getElementById('fotoGrandeLoVi').href='https://wa.me/549'+telLimpio+'?text='+msgLoVi;
+  document.getElementById('fotoGrandeCompartir').onclick=()=>compartirMascota(m.nombre);
+  document.getElementById('fotoGrandeTel').href='https://wa.me/549'+telLimpio;
+  document.getElementById('fotoGrandeTel').innerText='📱 '+m.contacto;
+  document.getElementById('prevFoto').style.display=galeriaActual.length>1?'block':'none';
+  document.getElementById('nextFoto').style.display=galeriaActual.length>1?'block':'none';
+}
+window.cambiarFoto=function(dir){
+  let m=mascotas.find(x=>String(x.id)==String(mascotaActualId));
+  if(!m || galeriaActual.length==0) return;
+  indiceActual=(indiceActual+dir+galeriaActual.length)%galeriaActual.length;
+  mostrarFotoActual(m);
+}
+window.cerrarModoFoto=function(){closeModal('modalFotoGrande');}
+
+window.marcarYaVolvio=async function(){
+  let m=mascotas.find(x=>String(x.id)==String(mascotaActualId));
+  if(!m) return;
+  m.encontrado=true;
+  guardarLocalSeguro();
+  render();
+  cerrarModoFoto();
+  alert('¡Qué alegría! Gracias por avisar');
+  try{
+    await fetch(API_URL,{
+      method:'POST',
+      mode:'no-cors',
+      headers:{'Content-Type':'text/plain;charset=utf-8'},
+      body: JSON.stringify({action:'update', id:m.id, data:m})
+    });
+  }catch(e){ console.log('Error al actualizar en Sheet', e); }
+}
+
+function buscarSoloConFoto(ev){
+ const file=ev.target.files[0];if(!file)return;
+ const r=new FileReader();
+ r.onload=e=>{
+  const dataUrl=e.target.result;
+  document.getElementById('fotoPrev2').src=dataUrl;
+  document.getElementById('fotoWrap2').style.display='block';
+  calcularHashIA(dataUrl,h=>{
+   let temp={iaHash:h};
+   let res=mascotas.map(m=>{let r=scoreTotal(temp,m);return{...r,m}}).filter(x=>x.score>=55).sort((a,b)=>b.score-a.score);
+   closeModal('soloFotoModal');
+   document.getElementById('matchTitle').innerText=res.length+' parecidos';
+   document.getElementById('matchLista').innerHTML=res.map(x=>`<div class="card"><img src="${x.m.fotos?x.m.fotos[0]:x.m.foto}" onclick="verFotoGrande('${x.m.id}')"><b>${x.m.nombre} ${x.score}%</b></div>`).join('')||'Sin parecidos';
+   openModal('modalMatch');
+  });
+ };
+ r.readAsDataURL(file);
+}
+
+function buscarTodoConIA(){
+ if(mascotas.length<2){alert('Subí 2 fotos');return}
+ let todos=[];mascotas.forEach(a=>{mascotas.forEach(b=>{if(a.id<b.id){let r=scoreTotal(a,b);if(r.score>=55)todos.push({...r,a,b})}})});todos.sort((x,y)=>y.score-x.score);
+ document.getElementById('matchTitle').innerText=todos.length+' coincidencias';
+ document.getElementById('matchLista').innerHTML=todos.map(r=>`<div class="card"><b>${r.a.nombre} ↔ ${r.b.nombre} ${r.score}%</b></div>`).join('')||'Sin coincidencias';
+ openModal('modalMatch');
+}
+
+window.abrirForm=abrirForm;
+window.desdeMapa=desdeMapa;
+window.setFiltro=setFiltro;
+window.guardar=guardar;
+window.copiarAlias=copiarAlias;
+window.compartirMascota=compartirMascota;
+window.buscarTodoConIA=buscarTodoConIA;
+window.abrirSoloFoto=abrirSoloFoto;
+window.buscarSoloConFoto=buscarSoloConFoto;
+window.closeModal=closeModal;
 </script>
 </body>
 </html>
