@@ -189,17 +189,6 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{
   attribution:'&copy; OpenStreetMap contributors'
 }).addTo(map);
 
-// Círculo de referencia de Necochea / zona urbana
-const zonaNecochea=L.circle(NECOCHEA_COORDS,{
-  radius:4500,
-  color:'#111',
-  weight:2,
-  dashArray:'6,6',
-  fillColor:'#ffe600',
-  fillOpacity:0.08
-}).addTo(map);
-zonaNecochea.bindPopup('<b>Necochea</b><br>Tocá en cualquier punto del mapa para marcar un reporte.');
-
 function centrarNecochea(){
   map.setView(NECOCHEA_COORDS,13);
   setTimeout(()=>map.invalidateSize(),120);
