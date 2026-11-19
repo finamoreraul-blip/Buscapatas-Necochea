@@ -84,7 +84,7 @@ header{background:#111;color:#fff;padding:14px 20px;display:flex;justify-content
 <header>
   <div>
     <h1 id="tituloCiudad">🐾 BuscaPatas Necochea</h1>
-    <div class="header-sub">Si no sos de Necochea, pedí el link de tu ciudad</div>
+    <div class="header-sub">Si no sos de Necochea pedí el link de tu ciudad</div>
   </div>
   <span id="ubiTxt">Cargando...</span>
 </header>
@@ -173,8 +173,7 @@ header{background:#111;color:#fff;padding:14px 20px;display:flex;justify-content
 </div>
 
 <script>
-// CAMBIAR API_URL PARA NECOCHEA
-const API_URL='https://script.google.com/macros/s/AKfycbwkSukpwgNRgEvkDwbCB-k3KBsRevo7KMZDxaV9KeXrTyvHBq1tad5Sou5iKRB4AHGNRg/exec';
+const API_URL='https://script.google.com/macros/s/AKfycbxlR15bGFsxMOKlZjkIfD7zYFPUiKqZgzQ6oYLHIxgfzW8WnLQgrcGzxZFghxjzFVI/exec';
 const CIUDAD_FILTRO=new URLSearchParams(location.search).get('ciudad')||'Necochea';
 document.getElementById('tituloCiudad').innerText='🐾 BuscaPatas '+CIUDAD_FILTRO;
 const map=L.map('map').setView([-38.5545,-58.7396],13);
